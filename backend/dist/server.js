@@ -1,14 +1,18 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
-app.get('/api/health', (res, req) => {
+import express from 'express';
+import path from "path";
+import { env } from "./config/env.js";
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.get('/api/health', (req, res) => {
     res.status(200).json({ message: "Success" });
 });
-app.listen(3000, () => console.log('Server started on port 3000'));
+const __dirname = path.resolve();
+if (env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../admin/dist")));
+    app.get("/{*any}", (req, res) => {
+        res.sendFile(path.join(__dirname, "../admin", "dist", "index.html"));
+    });
+}
+app.listen(env.PORT, () => console.log('Server started on port 3000'));
 //# sourceMappingURL=server.js.map
