@@ -4,5 +4,11 @@ export const env = {
     NODE_ENV: process.env.NODE_ENV || 'development',
     PORT: process.env.PORT || 3000,
     DB_URL: process.env.DB_URL,
+    CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    INGEST_SIGNING_KEY: process.env.INNGEST_SIGNIN_KEY,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET,
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
 };
 //# sourceMappingURL=env.js.map

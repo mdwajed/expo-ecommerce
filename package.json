@@ -1,0 +1,19 @@
+{
+  "name": "expo-ecommerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "pnpm install",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:mobile": "pnpm --filter mobile start",
+    "build:admin": "pnpm --filter admin build",
+    "build:backend": "pnpm --filter backend build",
+    "build": "pnpm -r --filter ./backend --filter ./admin build",
+    "start":  "pnpm --filter backend start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.20.0"
+}
