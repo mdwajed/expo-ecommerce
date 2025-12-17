@@ -27,15 +27,15 @@ const syncUser = inngest.createFunction(
                 console.warn("User has no email, skipping creation", event.data.id);
                 return;
             }
+            const fullName = `${first_name || ""} ${last_name || ""}`.trim() || "User";
             const newUser = {
                 clerkId: id,
-                name: `${first_name || ""} ${last_name || ""}`.trim() || "User",
+                name: fullName,
                 email,
-                imageUrl: image_url || `https://ui-avatars.com/api/?name=${first_name + " " + last_name}`,
+                imageUrl: image_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`,
                 address: [],
                 wishlist: [],
-            };
-
+            }
             await User.create(newUser);
             console.log("User created successfully:", newUser);
         } catch (err) {
