@@ -39,7 +39,8 @@ const userSchema = new Schema({
 email:{
     type:String,
     required:true,
-    unique:true
+    unique:true,
+    index:true
 },
 name:{
     type:String,
@@ -52,7 +53,8 @@ imageUrl:{
 clerkId:{
     type:String,
     required:true,
-    unique:true
+    unique:true,
+    index:true
 },
 address:[addressSchema],
 wishlist:[
