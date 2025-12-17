@@ -57,8 +57,8 @@ const syncUser = inngest.createFunction(
             );
 
             console.log("User created/updated successfully:", newUser);
-            await User.create(newUser);
-            console.log("User created successfully:", newUser);
+            // await User.create(newUser);
+            // console.log("User created successfully:", newUser);
         } catch (err) {
             console.error("Error in syncUser:", err);
             throw err; // propagate so Inngest logs the failure
