@@ -31,7 +31,7 @@ const syncUser = inngest.createFunction(
                 clerkId: id,
                 name: `${first_name || ""} ${last_name || ""}`.trim() || "User",
                 email,
-                imageUrl: image_url || "https://ui-avatars.com/api/?name=User",
+                imageUrl: image_url || `https://ui-avatars.com/api/?name=${first_name + " " + last_name}`,
                 address: [],
                 wishlist: [],
             };
