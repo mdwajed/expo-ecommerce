@@ -1,5 +1,5 @@
 import express  from 'express';
-import type {Request,Response} from 'express';
+import type {Request,Response,Express} from 'express';
 import path from "path";
 import {env} from "./config/env.js";
 import {connectDb} from "./config/db.js";
@@ -7,7 +7,7 @@ import { clerkMiddleware } from '@clerk/express'
 import {serve} from 'inngest/express'
 import {inngest,functions} from "./config/inngest.js";
 
-const app = express()
+const app: Express  = express()
 
 app.use(express.json())
 
