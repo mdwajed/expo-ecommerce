@@ -20,8 +20,8 @@ const syncUser = inngest.createFunction(
 
             await connectDb();
 
-            const { id, email_address, first_name, last_name, image_url } = event.data;
-            const email = email_address?.[0]?.email_address;
+            const { id, email_addresses, first_name, last_name, image_url } = event.data;
+            const email = email_addresses?.[0]?.email_address;
 
             if (!email) {
                 console.warn("User has no email, skipping creation", event.data.id);
@@ -31,7 +31,7 @@ const syncUser = inngest.createFunction(
                 clerkId: id,
                 name: `${first_name || ""} ${last_name || ""}`.trim() || "User",
                 email,
-                imageUrl:image_url || "",
+                imageUrl: image_url || "https://ui-avatars.com/api/?name=User",
                 address: [],
                 wishlist: [],
             };
