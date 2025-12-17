@@ -1,8 +1,9 @@
 import { Inngest } from "inngest";
 import {connectDb} from "./db.js";
 import {User} from "../models/user.model.js";
+import {env} from "./env.js";
 
-export const inngest = new Inngest({ id: "ecommerce-app" });
+export const inngest = new Inngest({ id: "ecommerce-app",  signingKey: env.INGEST_SIGNING_KEY,  });
 
 // Your new function:
 const syncUser = inngest.createFunction(
@@ -24,7 +25,7 @@ const syncUser = inngest.createFunction(
             const newUser = {
                 clerkId: id,
                 name: `${first_name || ""} ${last_name || ""}`.trim() || "User",
-                email: email_address,
+                email: email_address?.[0]?.email_address || "",
                 image_url,
                 address: [],
                 wishlist: [],
