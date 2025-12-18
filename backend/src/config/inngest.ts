@@ -21,47 +21,46 @@ const syncUser = inngest.createFunction(
             await connectDb();
 
             const { id, email_addresses, first_name, last_name, image_url } = event.data;
-            // const email = email_addresses?.[0]?.email_address;
-            //
-            // if (!email) {
-            //     console.warn("User has no email, skipping creation", event.data.id);
-            //     return;
-            // }
-            // const fullName = `${first_name || ""} ${last_name || ""}`.trim() || "User";
-            // const newUser = {
-            //     clerkId: id,
-            //     name: fullName,
-            //     email,
-            //     imageUrl: image_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`,
-            //     address: [],
-            //     wishlist: [],
-            // }
-            const fullName = `${first_name || ""} ${last_name || ""}`.trim() || "User";
-            const userEmail = email_addresses?.[0]?.email_address ?? `no-email-${id}@example.com`;
-            const userImageUrl = image_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`;
+            const email = email_addresses?.[0]?.email_address;
 
+            if (!email) {
+                console.warn("User has no email, skipping creation", event.data.id);
+                return;
+            }
+            const fullName = `${first_name || ""} ${last_name || ""}`.trim() || "User";
             const newUser = {
                 clerkId: id,
                 name: fullName,
-                email: userEmail,
-                imageUrl: userImageUrl,
+                email,
+                imageUrl: image_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`,
                 address: [],
                 wishlist: [],
-            };
-
-// Idempotent insert/update to avoid duplicates if event retried
+            }
             await User.findOneAndUpdate(
                 { clerkId: id },
-                { $setOnInsert: newUser },
+                {
+                    $set: {
+                        clerkId: id,
+                        name: fullName,
+                        email: email.toLowerCase(),
+                        imageUrl:
+                            image_url ??
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`,
+                    },
+                    $setOnInsert: {
+                        address: [],
+                        wishlist: [],
+                    },
+                },
                 { upsert: true, new: true }
             );
-
-            console.log("User created/updated successfully:", newUser);
-            // await User.create(newUser);
-            // console.log("User created successfully:", newUser);
-        } catch (err) {
-            console.error("Error in syncUser:", err);
-            throw err; // propagate so Inngest logs the failure
+            console.log("User created successfully:", newUser);
+        } catch (err:any) {
+            if (err.code === 11000) {
+                console.warn("Duplicate user event ignored");
+                return;
+            }
+            throw err;
         }
     }
 );

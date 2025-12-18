@@ -37,10 +37,11 @@ const addressSchema = new Schema({
 
 const userSchema = new Schema({
 email:{
-    type:String,
-    required:true,
-    unique:true,
-    index:true
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
 },
 name:{
     type:String,

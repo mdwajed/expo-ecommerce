@@ -13,34 +13,20 @@ const syncUser = inngest.createFunction({ id: "sync-user" }, { event: "clerk/use
         }
         await connectDb();
         const { id, email_addresses, first_name, last_name, image_url } = event.data;
-        // const email = email_addresses?.[0]?.email_address;
-        //
-        // if (!email) {
-        //     console.warn("User has no email, skipping creation", event.data.id);
-        //     return;
-        // }
-        // const fullName = `${first_name || ""} ${last_name || ""}`.trim() || "User";
-        // const newUser = {
-        //     clerkId: id,
-        //     name: fullName,
-        //     email,
-        //     imageUrl: image_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`,
-        //     address: [],
-        //     wishlist: [],
-        // }
+        const email = email_addresses?.[0]?.email_address;
+        if (!email) {
+            console.warn("User has no email, skipping creation", event.data.id);
+            return;
+        }
         const fullName = `${first_name || ""} ${last_name || ""}`.trim() || "User";
-        const userEmail = email_addresses?.[0]?.email_address ?? `no-email-${id}@example.com`;
-        const userImageUrl = image_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`;
         const newUser = {
             clerkId: id,
             name: fullName,
-            email: userEmail,
-            imageUrl: userImageUrl,
+            email,
+            imageUrl: image_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`,
             address: [],
             wishlist: [],
         };
-        // Idempotent insert/update to avoid duplicates if event retried
-        await User.findOneAndUpdate({ clerkId: id }, { $setOnInsert: newUser }, { upsert: true, new: true });
         console.log("User created/updated successfully:", newUser);
         await User.create(newUser);
         console.log("User created successfully:", newUser);
